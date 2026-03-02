@@ -13,9 +13,20 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         },
       },
     });
+
+    if (config.get('DATABASE_URL')) {
+      console.log('✅ DATABASE_URL detected in environment.');
+    } else {
+      console.error('❌ DATABASE_URL NOT FOUND in environment variables!');
+    }
   }
 
   async onModuleInit() {
-    await this.$connect();
+    try {
+      await this.$connect();
+      console.log('🚀 Database connected successfully.');
+    } catch (e) {
+      console.error('❌ Error connecting to database:', e.message);
+    }
   }
 }
