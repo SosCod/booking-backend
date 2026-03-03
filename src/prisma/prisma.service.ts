@@ -6,16 +6,24 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor(config: ConfigService) {
+    const databaseUrl = config.get<string>('DATABASE_URL');
+
     super({
       datasources: {
         db: {
-          url: config.get<string>('DATABASE_URL'),
+          url: databaseUrl,
         },
       },
     });
 
-    if (config.get('DATABASE_URL')) {
-      console.log('✅ DATABASE_URL detected in environment.');
+    if (databaseUrl) {
+      // Mask password and user for security in logs
+      const maskedUrl = databaseUrl
+        .replace(/:([^@]+)@/, ':****@')
+        .split('@')[1];
+      console.log(
+        `✅ DATABASE_URL detected. Connecting to host: ${maskedUrl?.split('/')[0]}`,
+      );
     } else {
       console.error('❌ DATABASE_URL NOT FOUND in environment variables!');
     }
@@ -25,8 +33,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     try {
       await this.$connect();
       console.log('🚀 Database connected successfully.');
-    } catch (e) {
-      console.error('❌ Error connecting to database:', e.message);
+    } catch (error) {
+      console.error('❌ Error connecting to database:', error.message);
     }
   }
 }
