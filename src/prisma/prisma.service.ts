@@ -25,7 +25,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         `✅ DATABASE_URL detected. Connecting to host: ${maskedUrl?.split('/')[0]}`,
       );
     } else {
-      console.error('❌ DATABASE_URL NOT FOUND in environment variables!');
+      const errorMsg =
+        '❌ DATABASE_URL NOT FOUND in environment variables! Prisma will default to localhost and fail.';
+      console.error(errorMsg);
+      throw new Error(errorMsg);
     }
   }
 
