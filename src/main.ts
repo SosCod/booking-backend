@@ -7,6 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  console.log('--- Static Environment Variables Keys ---');
+  console.log(Object.keys(process.env).join(', '));
+  console.log('----------------------------------------');
+
   const allowedOrigins = configService.get<string>('ALLOWED_ORIGINS')
     ? configService.get<string>('ALLOWED_ORIGINS')?.split(',')
     : ['http://localhost:3000', 'http://localhost:3001'];
