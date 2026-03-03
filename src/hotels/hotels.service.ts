@@ -47,7 +47,7 @@ export class HotelsService {
         // Si es cualquier otro error inesperado (no un error conocido de Prisma)
         console.error('Error inesperado durante la creación del hotel:', error);
         throw new InternalServerErrorException(
-          'Ha ocurrido un error inesperado al crear el hotel.',
+          `Error al crear el hotel: ${error.message || 'Error desconocido'}`,
         );
       }
     }
